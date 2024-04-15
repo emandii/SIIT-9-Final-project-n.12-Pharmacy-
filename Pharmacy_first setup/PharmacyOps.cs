@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Pharmacy_first_setup
 {
@@ -75,167 +76,7 @@ namespace Pharmacy_first_setup
         {
             return option.Length == 1 && "1234567".Contains(option);
         }
-
-        public static void LoadProducts()
-        {
-            string category;
-
-            do
-            {
-                Console.Clear();
-                Console.WriteLine();
-                Console.WriteLine(" You want to update:");
-                Console.WriteLine(" 1) medicines");
-                Console.WriteLine(" 2) supplements");
-                Console.WriteLine(" 3) paramedical products");
-                Console.WriteLine(" 0) back to main menu");
-                category = Console.ReadLine();
-
-                if (category == "0")
-                {
-                    Console.Clear();
-                    return;
-                }
-
-                if (category != "1" && category != "2" && category != "3")
-                {
-
-                    Console.WriteLine(" Wrong selection; please select an option from the list");
-                    Console.WriteLine(" Press any key to continue...");
-                    Console.ReadKey();
-                }
-            } while (category != "1" && category != "2" && category != "3");
-
-            string categoryName = "";
-            if (category == "1")
-                categoryName = "medicines";
-            else if (category == "2")
-                categoryName = "supplements";
-            else if (category == "3")
-                categoryName = "paramedical products";
-
-            if (data.ContainsKey(categoryName) && data[categoryName].Count > 0)
-            {
-                Console.Clear();
-
-                Console.WriteLine($" Products stocked in {categoryName}:");
-
-                foreach (Product product in data[categoryName])
-                {
-                    Console.WriteLine($"{product.Name} - {product.Quantity} units - Price per unit: {product.Price.ToString("F2", CultureInfo.InvariantCulture)} RON");
-
-                    Console.Write(" Name of product to update: ");
-
-                    string productName = Console.ReadLine();
-
-                    bool produsGasit = false;
-
-                    foreach (Product prod in data[categoryName])
-                    {
-                        if (prod.Name.ToLower() == productName.ToLower())
-                        {
-                            int quantity;
-                            do
-                            {
-                                Console.WriteLine($" insert {product.Name} quantity added:");
-                                string input = Console.ReadLine();
-
-                                if (!int.TryParse(input, out quantity) || quantity <= 0)
-                                {
-                                    Console.Clear();
-                                    Console.WriteLine
-                                        (@"
-
-                                       ░░░░░▄▀░░░░░░░░░░░░░▀▀▄▄░░░░░ 
-                                       ░░░▄▀░░░░░░░░░░░░░░░░░░░▀▄░░░ 
-                                       ░░▄▀░░░░░░░░░░░░░░░░░░░░░░█░░ 
-                                       ░█░░░░░░░░░░░░░░░░░░░░░░░░░█░ 
-                                       ▐░░░░░░░░░░░░░░░░░░░░░░░░░░░█ 
-                                       █░░░░▀▀▄▄▄▄░░░▄▌░░░░░░░░░░░░▐ 
-                                       ▌░░░░░▌░░▀▀█▀▀░░░▄▄░░░░░░░▌░▐ 
-                                       ▌░░░░░░▀▀▀▀░░░░░░▌░▀██▄▄▄▀░░▐ 
-                                       ▌░░░░░░░░░░░░░░░░░▀▄▄▄▄▀░░░▄▌ 
-                                       ▐░░░░▐░░░░░░░░░░░░░░░░░░░░▄▀░ 
-                                       ░█░░░▌░░▌▀▀▀▄▄▄▄░░░░░░░░░▄▀░░ 
-                                       ░░█░░▀░░░░░░░░░░▀▌░░▌░░░█░░░░ 
-                                       ░░░▀▄░░░░░░░░░░░░░▄▀░░▄▀░░░░░ 
-                                       ░░░░░▀▄▄▄░░░░░░░░░▄▄▀▀░░░░░░░ 
-                                       ░░░░░░░░▐▌▀▀▀▀▀▀▀▀░░░░░░░░░░░ 
-                                       ░░░░░░░░█░░░░░░░░░░░░░░░░░░░░                                       
-                                      
-                                      "
-                                        );
-                                    Console.WriteLine($" Only positive integers allowed; please insert a valid number of {product.Name} units to be added");
-                                }
-                            }
-                            while (quantity <= 0);
-
-                            prod.Quantity += quantity;
-
-                            Console.Clear();
-                            Console.WriteLine
-                             (@"
-
-                           ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-                           ██░▄▄░██░██░█░▄▄▀██░▀██░█▄▄░▄▄█▄░▄█▄▄░▄▄██░███░████░██░██░▄▄░██░▄▄▀█░▄▄▀█▄▄░▄▄██░▄▄▄██░▄▄▀█
-                           ██░██░██░██░█░▀▀░██░█░█░███░████░████░████▄▀▀▀▄████░██░██░▀▀░██░██░█░▀▀░███░████░▄▄▄██░██░█
-                           ██▄▄░▀██▄▀▀▄█░██░██░██▄░███░███▀░▀███░██████░██████▄▀▀▄██░█████░▀▀░█░██░███░████░▀▀▀██░▀▀░█
-                           ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
-
-                        ");
-
-                            Console.WriteLine($" Quantity updated, new quantity of {product.Name} = {prod.Quantity}");
-
-                            produsGasit = true;
-                            break;
-                        }
-                    }
-
-                    if (!produsGasit)
-                    {
-                        Console.Clear();
-                        Console.WriteLine
-                            (@"
-
-                          ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-                          █▀▄▄▀█ ▄▄▀█▀▄▄▀█ ▄▀█ ██ █▀▄▀█▄ ▄███ ▄▄▀█▀▄▄▀█▄ ▄███ ▄▄█▀▄▄▀█ ██ █ ▄▄▀█ ▄▀█
-                          █ ▀▀ █ ▀▀▄█ ██ █ █ █ ██ █ █▀██ ████ ██ █ ██ ██ ████ ▄██ ██ █ ██ █ ██ █ █ █
-                          █ ████▄█▄▄██▄▄██▄▄███▄▄▄██▄███▄████▄██▄██▄▄███▄████▄████▄▄███▄▄▄█▄██▄█▄▄██
-                          ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀                           
-
-                         "
-                            );
-                        Console.WriteLine(" This product does not exist yet; please select \"Add new product\" or choose a different option from the below list");
-                        Console.WriteLine
-                            (@"
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-                       ");
-                        return;
-                    }
-                }
-            }
-            else
-            {
-                Console.Clear();
-                Console.WriteLine
-                    (@"
-
-                   ^ ^           
-                  (O,O)          
-                  (   ) Empty    
-                 -""-""-----------
-                 
-                "
-                    );
-                Console.WriteLine(" Stock is empty; please select \"Add new product\" or choose a different option from the below list");
-            }
-
-            Console.WriteLine(" Press any key to go back to Main Menu...");
-            Console.ReadKey();
-            Console.Clear();
-        }
+        
 
         public static void SellProducts()
         {
@@ -243,14 +84,14 @@ namespace Pharmacy_first_setup
 
             if (data.Values.Any(category => category.Any(product => product.Quantity > 0)))
             {
-                Console.WriteLine($" Select the Product you want to sell:");
+                Console.WriteLine("Select the Product you want to sell:");
                 foreach (var category in data)
                 {
                     foreach (var product in category.Value)
                     {
                         if (product.Quantity > 0)
                         {
-                            Console.WriteLine($" {product.Name} - {product.Quantity} units - Price: {product.Price.ToString("F2", CultureInfo.InvariantCulture)} RON");
+                            Console.WriteLine($"{product.Name} - {product.Quantity} units - Price: {product.Price.ToString("N2", CultureInfo.InvariantCulture)} RON");
                         }
                     }
                 }
@@ -260,43 +101,27 @@ namespace Pharmacy_first_setup
 
                 do
                 {
-                    Console.Write(" Product Name: ");
-                    productName = Console.ReadLine();
-                    productName = productName.ToLower();
+                    Console.Write("Product Name: ");
+                    productName = Console.ReadLine().ToLower();
 
-                    if (!data.Values.Any(category => category.Any(product => product.Name == productName)))
+                    if (!data.Values.Any(category => category.Any(product => product.Name.ToLower() == productName)))
                     {
-                        Console.WriteLine(" Incorrect product; please select a product from the list.");
-                        Console.WriteLine(" 1. Press \"Enter\" to select a different product");
-                        Console.WriteLine(" 2. Press \"Delete\" to Go Back to Main Menu");
-
-                        while (true)
-                        {
-                            ConsoleKeyInfo keyInfo = Console.ReadKey();
-                            if (keyInfo.Key == ConsoleKey.Enter)
-                            {
-                                break;
-                            }
-                            else if (keyInfo.Key == ConsoleKey.Delete)
-                            {
-                                Console.Clear();
-                                Console.WriteLine();
-                                return;
-                            }
-                            else
-                            {
-                                Console.WriteLine(" Invalid option. Please choose a valid option.");
-                            }
-                        }
+                        Console.WriteLine("Incorrect product; please select a product from the list.");
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        Console.Clear();
+                        continue;
                     }
-                } while (!data.Values.Any(category => category.Any(product => product.Name == productName)));
+
+                    break;
+                } while (true);
 
                 do
                 {
-                    Console.Write(" Number of units sold: ");
+                    Console.Write("Number of units sold: ");
                     if (!int.TryParse(Console.ReadLine(), out quantity) || quantity <= 0)
                     {
-                        Console.WriteLine(" Number of units is not valid. Please enter a valid positive integer.");
+                        Console.WriteLine("Invalid number of units. Please enter a valid positive integer.");
                     }
                 } while (quantity <= 0);
 
@@ -306,14 +131,14 @@ namespace Pharmacy_first_setup
                 {
                     foreach (var product in category.Value)
                     {
-                        if (product.Name == productName)
+                        if (product.Name.ToLower() == productName)
                         {
                             productExists = true;
                             if (product.Quantity >= quantity)
                             {
                                 Console.Clear();
                                 product.Quantity -= quantity;
-                                decimal totalPrice = (decimal)quantity * product.Price;
+                                decimal totalPrice = quantity * product.Price;
                                 {
                                     Console.WriteLine
                                         (@"
@@ -327,20 +152,20 @@ namespace Pharmacy_first_setup
 
                                        ");
                                 }
-                                Console.WriteLine($" You earned {totalPrice:F2} RON.");
+                                Console.WriteLine($"You earned {totalPrice:N2} RON.");
 
                                 if (product.Quantity == 0)
                                 {
                                     category.Value.Remove(product);
-                                    Console.WriteLine($" Product {product.Name} has been deleted from stock because the total amount of remaining units reached zero.");
+                                    Console.WriteLine($"Product {product.Name} has been deleted from stock because the total amount of remaining units reached zero.");
                                 }
                             }
                             else
                             {
-                                Console.WriteLine(" Quantity of selected product is insufficient.");
+                                Console.WriteLine("Quantity of selected product is insufficient.");
                             }
 
-                            Console.WriteLine(" Press any key to return to Main Menu...");
+                            Console.WriteLine("Press any key to return to Main Menu...");
                             Console.ReadKey();
                             Console.Clear();
                             return;
@@ -350,24 +175,23 @@ namespace Pharmacy_first_setup
 
                 if (!productExists)
                 {
-                    Console.WriteLine(" Selected product does not exist.");
+                    Console.WriteLine("Selected product does not exist.");
                 }
-                
 
-                Console.WriteLine(" Press any key to return to Main Menu...");
+                Console.WriteLine("Press any key to return to Main Menu...");
                 Console.ReadKey();
                 Console.Clear();
             }
             else
             {
-                Console.WriteLine($" No products available");
-                Console.WriteLine(" Press any key to return to Main Menu...");
+                Console.WriteLine("No products available");
+                Console.WriteLine("Press any key to return to Main Menu...");
                 Console.ReadKey();
                 Console.Clear();
             }
         }
 
-        public static void RemoveExpiredProducts()
+public static void RemoveExpiredProducts()
         {
             Console.Clear ();
             while (true)
@@ -550,10 +374,11 @@ namespace Pharmacy_first_setup
                     expirationDate = date;
                 }
 
-                if (!data.ContainsKey(categoryName))
-                    data[categoryName] = new List<Product>();
+                if (data.ContainsKey(categoryName))
+                {
+                    data[categoryName].Add(new Product(selectedProduct, quantity, price, expirationDate));
+                }
 
-                data[categoryName].Add(new Product(selectedProduct, quantity, price / 100, expirationDate));
 
                 Console.Clear();
                 Console.WriteLine
@@ -576,6 +401,194 @@ namespace Pharmacy_first_setup
             }
 
             Console.WriteLine(" Press any key to return to Main Menu...");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        public static void LoadProducts()
+        {
+            string category;
+
+            do
+            {
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine("You want to update:");
+                Console.WriteLine("1) medicines");
+                Console.WriteLine("2) supplements");
+                Console.WriteLine("3) paramedical products");
+                Console.WriteLine("0) back to main menu");
+                category = Console.ReadLine();
+
+                if (category == "0")
+                {
+                    Console.Clear();
+                    return;
+                }
+
+                if (category != "1" && category != "2" && category != "3")
+                {
+                    Console.WriteLine("Wrong selection; please select an option from the list");
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey();
+                }
+            } while (category != "1" && category != "2" && category != "3");
+
+            string categoryName = "";
+            if (category == "1")
+                categoryName = "medicines";
+            else if (category == "2")
+                categoryName = "supplements";
+            else if (category == "3")
+                categoryName = "paramedical products";
+
+            if (data.ContainsKey(categoryName) && data[categoryName].Count > 0)
+            {
+                Console.Clear();
+
+                Console.WriteLine($"Products stocked in {categoryName}:");
+
+                foreach (Product prod in data[categoryName])
+                {
+                    Console.WriteLine($" {prod.Name} - {prod.Quantity} units - Price per unit: {prod.Price.ToString("N2", CultureInfo.InvariantCulture)} RON");
+                }
+
+                Console.Write("Name of the product you want to update: ");
+                string productName = Console.ReadLine();
+
+                bool productFound = false;
+
+                foreach (Product prod in data[categoryName])
+                {
+                    if (string.Equals(prod.Name, productName, StringComparison.OrdinalIgnoreCase))
+                    {
+
+
+                        int quantity;
+
+                        do
+                        {
+                            Console.WriteLine($"Insert {prod.Name} quantity added:");
+                            string input = Console.ReadLine();
+
+                            if (!int.TryParse(input, out quantity) || quantity <= 0)
+                            {
+                                Console.Clear();
+                                Console.WriteLine
+                                    (@"
+
+                                       ░░░░░▄▀░░░░░░░░░░░░░▀▀▄▄░░░░░ 
+                                       ░░░▄▀░░░░░░░░░░░░░░░░░░░▀▄░░░ 
+                                       ░░▄▀░░░░░░░░░░░░░░░░░░░░░░█░░ 
+                                       ░█░░░░░░░░░░░░░░░░░░░░░░░░░█░ 
+                                       ▐░░░░░░░░░░░░░░░░░░░░░░░░░░░█ 
+                                       █░░░░▀▀▄▄▄▄░░░▄▌░░░░░░░░░░░░▐ 
+                                       ▌░░░░░▌░░▀▀█▀▀░░░▄▄░░░░░░░▌░▐ 
+                                       ▌░░░░░░▀▀▀▀░░░░░░▌░▀██▄▄▄▀░░▐ 
+                                       ▌░░░░░░░░░░░░░░░░░▀▄▄▄▄▀░░░▄▌ 
+                                       ▐░░░░▐░░░░░░░░░░░░░░░░░░░░▄▀░ 
+                                       ░█░░░▌░░▌▀▀▀▄▄▄▄░░░░░░░░░▄▀░░ 
+                                       ░░█░░▀░░░░░░░░░░▀▌░░▌░░░█░░░░ 
+                                       ░░░▀▄░░░░░░░░░░░░░▄▀░░▄▀░░░░░ 
+                                       ░░░░░▀▄▄▄░░░░░░░░░▄▄▀▀░░░░░░░ 
+                                       ░░░░░░░░▐▌▀▀▀▀▀▀▀▀░░░░░░░░░░░ 
+                                       ░░░░░░░░█░░░░░░░░░░░░░░░░░░░░                                       
+                                      
+                                      "
+                                    );
+                                Console.WriteLine($" Only positive integers allowed; please insert a valid number of {prod.Name} units to be added");
+                            }
+                        }
+                        while (quantity <= 0);
+
+                        prod.Quantity += quantity;
+
+                        Console.Clear();
+                        Console.WriteLine
+                         (@"
+
+                           ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+                           ██░▄▄░██░██░█░▄▄▀██░▀██░█▄▄░▄▄█▄░▄█▄▄░▄▄██░███░████░██░██░▄▄░██░▄▄▀█░▄▄▀█▄▄░▄▄██░▄▄▄██░▄▄▀█
+                           ██░██░██░██░█░▀▀░██░█░█░███░████░████░████▄▀▀▀▄████░██░██░▀▀░██░██░█░▀▀░███░████░▄▄▄██░██░█
+                           ██▄▄░▀██▄▀▀▄█░██░██░██▄░███░███▀░▀███░██████░██████▄▀▀▄██░█████░▀▀░█░██░███░████░▀▀▀██░▀▀░█
+                           ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+                            ");
+
+                        Console.WriteLine($" Quantity updated, new quantity of {prod.Name} = {prod.Quantity}");
+                        Console.WriteLine
+                        (@"
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                           ");
+
+                        decimal price;
+                        bool validPrice;
+                        do
+                        {
+                            Console.WriteLine($"Insert new price per unit for {prod.Name}:");
+                            validPrice = decimal.TryParse(Console.ReadLine(), out price) && price > 0;
+                            if (!validPrice)
+                            {
+                                Console.WriteLine("Invalid price; please insert a valid price:");
+
+                            }
+                        }
+                        while (!validPrice);
+
+                        prod.Price = price;
+
+                        Console.Clear();
+                        Console.WriteLine($"Price updated; new price for {prod.Name} is {prod.Price.ToString("N2", CultureInfo.InvariantCulture)} RON");
+
+                        productFound = true;
+                        break;
+                    }
+                }
+
+                if (!productFound)
+                {
+                    Console.Clear();
+                    Console.WriteLine
+                            (@"
+
+                          ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+                          █▀▄▄▀█ ▄▄▀█▀▄▄▀█ ▄▀█ ██ █▀▄▀█▄ ▄███ ▄▄▀█▀▄▄▀█▄ ▄███ ▄▄█▀▄▄▀█ ██ █ ▄▄▀█ ▄▀█
+                          █ ▀▀ █ ▀▀▄█ ██ █ █ █ ██ █ █▀██ ████ ██ █ ██ ██ ████ ▄██ ██ █ ██ █ ██ █ █ █
+                          █ ████▄█▄▄██▄▄██▄▄███▄▄▄██▄███▄████▄██▄██▄▄███▄████▄████▄▄███▄▄▄█▄██▄█▄▄██
+                          ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀                           
+
+                         "
+                            );
+                        Console.WriteLine(" This product does not exist yet; please select \"Add new product\" or choose a different option from the below list");
+                        Console.WriteLine
+                            (@"
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                           ");
+                        return;
+                    
+                }
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine
+                    (@"
+
+                   ^ ^           
+                  (O,O)          
+                  (   ) Empty    
+                 -""-""-----------
+                 
+
+                    ");
+                Console.WriteLine(" Stock is empty; please select \"Add new product\" or choose a different option from the below list");
+            }
+
+            Console.WriteLine(" Press any key to go back to Main Menu...");
             Console.ReadKey();
             Console.Clear();
         }
