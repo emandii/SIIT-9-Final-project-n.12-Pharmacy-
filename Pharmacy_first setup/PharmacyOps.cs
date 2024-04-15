@@ -349,13 +349,17 @@ public static void RemoveExpiredProducts()
                 bool validPrice;
                 do
                 {
-                    Console.Write(" Insert price per unit: ");
-                    validPrice = decimal.TryParse(Console.ReadLine().Replace(',', '.'), out price) && price > 0;
+                    Console.WriteLine($" Insert price per unit:");
+                    string input = Console.ReadLine();
+
+                    validPrice = decimal.TryParse(input.Replace(',', '.'), NumberStyles.Number, CultureInfo.InvariantCulture, out price) && price > 0;
+
                     if (!validPrice)
                     {
-                        Console.WriteLine(" Invalid price; Please insert a valid price:");
+                        Console.WriteLine("Invalid price; please insert a valid price:");
                     }
-                } while (!validPrice);
+                }
+                while (!validPrice);
 
                 DateTime? expirationDate = null;
                 if (category == "1" || category == "2")
@@ -521,18 +525,20 @@ public static void RemoveExpiredProducts()
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                           ");
+                       ");
 
                         decimal price;
                         bool validPrice;
                         do
                         {
                             Console.WriteLine($"Insert new price per unit for {prod.Name}:");
-                            validPrice = decimal.TryParse(Console.ReadLine(), out price) && price > 0;
+                            string input = Console.ReadLine();
+
+                            validPrice = decimal.TryParse(input.Replace(',', '.'), NumberStyles.Number, CultureInfo.InvariantCulture, out price) && price > 0;
+
                             if (!validPrice)
                             {
                                 Console.WriteLine("Invalid price; please insert a valid price:");
-
                             }
                         }
                         while (!validPrice);
